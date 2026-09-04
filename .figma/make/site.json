@@ -1,0 +1,10 @@
+{
+  "description": "Create personalized applications effortlessly with this intuitive platform, designed for users seeking to transform ideas into functional web apps.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
