@@ -78,13 +78,12 @@ export default function CaptureModal({ onClose, onSave }: CaptureModalProps) {
   };
 
   const toggleRecording = () => {
-    setRecording((r) => !r);
-    if (!recording) {
-      setTimeout(() => {
-        setRecording(false);
-        setThought('What if we could make it easier for hostel students to share surplus food between rooms instead of throwing it away?');
-        setMode('text');
-      }, 2500);
+    if (recording) {
+      setRecording(false);
+      setThought('What if we could make it easier for hostel students to share surplus food between rooms instead of throwing it away?');
+      setMode('text');
+    } else {
+      setRecording(true);
     }
   };
 
@@ -179,7 +178,14 @@ export default function CaptureModal({ onClose, onSave }: CaptureModalProps) {
                 autoFocus
                 value={thought}
                 onChange={(e) => setThought(e.target.value)}
-                placeholder="Paste a link to something that inspired you…"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && thought.startsWith('http')) {
+                    setTitle('Inspired by: ' + new URL(thought).hostname);
+                    setThought('A thought inspired by this link: ' + thought + '\\n\\nThis addresses a gap I noticed recently.');
+                    setMode('text');
+                  }
+                }}
+                placeholder="Paste a link and press Enter..."
                 className="w-full text-sm px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:border-[var(--ring)]"
               />
             )}

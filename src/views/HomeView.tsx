@@ -20,6 +20,17 @@ const SUGGESTED_COLLABORATORS = [
 
 export default function HomeView({ onCapture, onOpenIdea, ideas }: HomeViewProps) {
   const [resurface, setResurface] = useState(true);
+  const [invited, setInvited] = useState<Set<string>>(new Set());
+  
+  const toggleInvite = (userId: string) => {
+    setInvited(prev => {
+      const next = new Set(prev);
+      if (next.has(userId)) next.delete(userId);
+      else next.add(userId);
+      return next;
+    });
+  };
+
   const unread = NOTIFICATIONS.filter((n) => !n.read).length;
   const myIdeas = ideas.filter((i) => i.author.id === CURRENT_USER.id).slice(0, 3);
   const recentActivity = ideas.filter((i) => i.author.id !== CURRENT_USER.id).slice(0, 2);
@@ -134,7 +145,14 @@ export default function HomeView({ onCapture, onOpenIdea, ideas }: HomeViewProps
                   <p className="text-xs text-[var(--muted-foreground)]">{user.title}</p>
                   <p className="text-xs text-[var(--muted-foreground)] mt-0.5">For: <span className="text-[var(--foreground)]">{forIdea}</span></p>
                 </div>
-                <Button variant="outline" size="xs">Invite</Button>
+                <Button 
+                  variant={invited.has(user.id) ? "secondary" : "outline"} 
+                  size="xs"
+                  onClick={() => toggleInvite(user.id)}
+                  className={invited.has(user.id) ? "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100" : ""}
+                >
+                  {invited.has(user.id) ? 'Invited' : 'Invite'}
+                </Button>
               </div>
             </Card>
           ))}

@@ -23,7 +23,10 @@ export default function LandingView({ onStart }: LandingViewProps) {
           </div>
           <span className="font-display font-bold text-base text-[var(--foreground)]">IdeaWeave</span>
         </div>
-        <Button variant="outline" size="sm" onClick={onStart}>Sign in</Button>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" onClick={onStart}>Log in</Button>
+          <Button variant="outline" size="sm" onClick={onStart}>Sign in</Button>
+        </div>
       </header>
 
       {/* Hero */}

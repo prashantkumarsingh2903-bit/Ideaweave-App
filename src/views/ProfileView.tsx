@@ -10,6 +10,13 @@ export default function ProfileView() {
   const myIdeas = IDEAS.filter((i) => i.author.id === CURRENT_USER.id);
   const myContributions = IDEAS.filter((i) => i.contributors.some((c) => c.user.id === CURRENT_USER.id));
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [profileData, setProfileData] = useState({
+    name: CURRENT_USER.name,
+    title: CURRENT_USER.title,
+    bio: CURRENT_USER.bio
+  });
+
   const TABS: { id: ProfileTab; label: string }[] = [
     { id: 'map', label: 'Contribution Map' },
     { id: 'projects', label: 'Projects' },
@@ -36,14 +43,43 @@ export default function ProfileView() {
             {CURRENT_USER.initials}
           </div>
           <div className="flex-1">
-            <h1 className="font-display font-bold text-xl text-[var(--foreground)]">{CURRENT_USER.name}</h1>
-            <p className="text-sm text-[var(--muted-foreground)]">{CURRENT_USER.title}</p>
-            <p className="text-xs text-[var(--muted-foreground)] mt-1 leading-relaxed max-w-md">{CURRENT_USER.bio}</p>
+            {isEditing ? (
+              <div className="space-y-2 max-w-md">
+                <input 
+                  value={profileData.name} 
+                  onChange={e => setProfileData({...profileData, name: e.target.value})} 
+                  className="w-full text-xl font-display font-bold px-2 py-1 rounded border border-[var(--border)] focus:outline-none focus:border-[var(--primary)]"
+                />
+                <input 
+                  value={profileData.title} 
+                  onChange={e => setProfileData({...profileData, title: e.target.value})} 
+                  className="w-full text-sm px-2 py-1 rounded border border-[var(--border)] focus:outline-none focus:border-[var(--primary)]"
+                />
+                <textarea 
+                  value={profileData.bio} 
+                  onChange={e => setProfileData({...profileData, bio: e.target.value})} 
+                  rows={3}
+                  className="w-full text-xs leading-relaxed px-2 py-1 rounded border border-[var(--border)] focus:outline-none focus:border-[var(--primary)] resize-none"
+                />
+              </div>
+            ) : (
+              <>
+                <h1 className="font-display font-bold text-xl text-[var(--foreground)]">{profileData.name}</h1>
+                <p className="text-sm text-[var(--muted-foreground)]">{profileData.title}</p>
+                <p className="text-xs text-[var(--muted-foreground)] mt-1 leading-relaxed max-w-md">{profileData.bio}</p>
+              </>
+            )}
             <div className="flex flex-wrap gap-1.5 mt-2">
               {CURRENT_USER.domains.map((d) => <Tag key={d} color="indigo">{d}</Tag>)}
             </div>
           </div>
-          <Button variant="outline" size="sm">Edit profile</Button>
+          <Button 
+            variant={isEditing ? "default" : "outline"} 
+            size="sm"
+            onClick={() => setIsEditing(!isEditing)}
+          >
+            {isEditing ? "Save changes" : "Edit profile"}
+          </Button>
         </div>
 
         {/* Stats */}
